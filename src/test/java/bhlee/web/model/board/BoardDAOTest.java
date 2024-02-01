@@ -25,10 +25,10 @@ public class BoardDAOTest {
     public void testAddSuccess() {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBoard_detail("Test");
-        boardDTO.setWriter("Test writer");
-        boardDTO.setTitle("test Title");
+        boardDTO.setWriter("Test writer_6");
+        boardDTO.setTitle("test Title_6");
         int result = boardDAO.add(boardDTO);
-
+        System.out.println(result);
         Assert.assertNotNull(result);
     }
 
@@ -47,16 +47,20 @@ public class BoardDAOTest {
     @Rollback
     public void testSelectSuccess() {
         int beforeAdd = boardDAO.totalCount();
+        if (beforeAdd > 25) {
+            beforeAdd = 25;
+        } else {
+            beforeAdd+=1;
+        }
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBoard_detail("Test");
         boardDTO.setWriter("Test writer");
         boardDTO.setTitle("test Title");
 
         boardDAO.add(boardDTO);
-        List<BoardDTO> boards = boardDAO.getBoards(25, 1);
-        System.out.println(boards.get(0).getCreate_at());
+        List<BoardDTO> boards = boardDAO.getBoardList(25, 1);
 
-        Assert.assertEquals(beforeAdd+1, boards.size());
+        Assert.assertEquals(beforeAdd, boards.size());
     }
 
     @Test
@@ -64,7 +68,7 @@ public class BoardDAOTest {
     @Rollback
     public void testSelectFailed() {
         try {
-            List<BoardDTO> boards = boardDAO.getBoards(25, -1);
+            List<BoardDTO> boards = boardDAO.getBoardList(25, -1);
         } catch (Exception e) {
             Assert.assertEquals(BadSqlGrammarException.class, e.getClass());
         }

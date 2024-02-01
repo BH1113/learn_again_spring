@@ -13,6 +13,7 @@ public class BoardDTO {
     private String writer;
     private String board_detail;
     private LocalDateTime create_at;
+    private LocalDateTime update_at;
 
     public LocalDateTime getCreate_at() {
         return create_at;
@@ -22,15 +23,14 @@ public class BoardDTO {
         this.create_at = create_at;
     }
 
-    public Date getUpdate_at() {
+    public LocalDateTime getUpdate_at() {
         return update_at;
     }
 
-    public void setUpdate_at(Date update_at) {
+    public void setUpdate_at(LocalDateTime update_at) {
         this.update_at = update_at;
     }
 
-    private Date update_at;
     public int getPk() {
         return pk;
     }

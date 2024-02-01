@@ -50,8 +50,6 @@ public class CommonImpl implements Common {
             if (i == currentPage) {
                 paging.setPrevNum(currentPage - halfSize - 1);
                 paging.setNextNum(currentPage + halfSize + 1);
-                System.out.println(paging.getNextNum());
-                System.out.println(currentPage);
                 if (currentPage == 1) {
                     paging.setNextNum(currentPage + size);
                 }

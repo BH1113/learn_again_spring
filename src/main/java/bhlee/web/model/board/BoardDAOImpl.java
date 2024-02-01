@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -44,26 +45,34 @@ public class BoardDAOImpl implements BoardDAO {
     }
 
     @Override
-    public List<BoardDTO> getBoards(int rowCount, int page) {
+    public List<BoardDTO> getBoardList(int rowCount, int page) {
         int offset = (page-1) * rowCount;
-        BoardMapper boardMapper = new BoardMapper();
         List<BoardDTO> boardList = (List<BoardDTO>) jdbcTemplate.query(
                 new PreparedStatementCreator() {
                     @Override
                     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                         PreparedStatement psmt = con.prepareStatement(
-                                "SELECT * FROM board ORDER BY create_at DESC LIMIT ? OFFSET ?"
+                                "SELECT pk, writer, title, create_at FROM board ORDER BY create_at DESC LIMIT ? OFFSET ?"
                         );
                         psmt.setInt(1, rowCount);
                         psmt.setInt(2, offset);
                         return psmt;
                     }
-                }, boardMapper);
+                }, new RowMapper<BoardDTO>() {
+                    public BoardDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        BoardDTO boardDTO = new BoardDTO();
+                        boardDTO.setPk(rs.getInt("pk"));
+                        boardDTO.setWriter(rs.getString("writer"));
+                        boardDTO.setTitle(rs.getString("title"));
+                        boardDTO.setCreate_at(rs.getTimestamp("create_at").toLocalDateTime());
+                        return boardDTO;
+                    }
+                });
         return boardList;
     }
 
     @Override
-    public BoardDTO getBoard(int pk) {
+    public BoardDTO getBoardByPk(int pk) {
         BoardMapper boardMapper = new BoardMapper();
         BoardDTO boardDTO = (BoardDTO) jdbcTemplate.query(
                 new PreparedStatementCreator() {

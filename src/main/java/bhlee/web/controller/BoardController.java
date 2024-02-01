@@ -1,20 +1,15 @@
 package bhlee.web.controller;
 
 import bhlee.web.model.board.BoardDAOImpl;
-import bhlee.web.model.board.BoardDTO;
 import bhlee.web.model.board.BoardDAO;
+import bhlee.web.model.board.BoardDTO;
 import bhlee.web.service.BoardService;
 import bhlee.web.service.classes.BoardList;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.List;
 @Slf4j
 @Controller
 public class BoardController {
@@ -24,15 +19,20 @@ public class BoardController {
 
     public void setBoardDAO(BoardDAOImpl boardDAO) {this.boardDAO = boardDAO;}
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String hello(Model model) {
+    public String entries(Model model) {
         return "index";
     }
     @RequestMapping(value = "/board-list", method = RequestMethod.GET)
     @ResponseBody
-    public BoardList getBoard() {
-        BoardList ret = boardService.getBoards(boardDAO, 1);
-        return ret;
+    public BoardList getBoardList(@RequestParam("page") int selPage) {
+        return boardService.getBoardsList(boardDAO, selPage);
     }
 
-
+    @RequestMapping(value ="/board-content", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean insertBoard(@RequestBody BoardDTO boardDTO) {
+        boardService.insertBoard(boardDAO,boardDTO.getTitle(), boardDTO.getWriter(), boardDTO.getBoard_detail());
+        return true;
+    }
+    // 테스트 시 CORS 에러 발생하여 method.options 응답하기 위해 이용
 }

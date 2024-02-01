@@ -16,12 +16,6 @@
 	<mvc:resources mapping="/resources/**" location="/resources/" cache-period="60"/>
 	<context:property-placeholder location="classpath:/application.properties"/>
 
-	<!--지금은 전체 url 에 대해서 interceptor 적용중-->
-	<mvc:interceptors>
-		<bean id="corsInterceptor"
-			  class="bhlee.web.interceptor.CorsFilter"/>
-	</mvc:interceptors>
-
 	<bean id="dataSource"
 		  class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="${db_local.driver}"/>

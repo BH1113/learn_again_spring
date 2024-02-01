@@ -16,6 +16,7 @@ public class BoardMapper implements RowMapper<BoardDTO> {
         boardDTO.setWriter(rs.getString("writer"));
         boardDTO.setPk(rs.getInt("pk"));
         boardDTO.setCreate_at(rs.getTimestamp("create_at").toLocalDateTime());
+        boardDTO.setUpdate_at(rs.getTimestamp("update_at").toLocalDateTime());
         return boardDTO;
     }
 }
